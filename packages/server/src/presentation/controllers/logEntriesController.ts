@@ -12,7 +12,7 @@ logEntriesController.get('/logs/:logId/log-entries', async (req, res) => {
   res.json(logEntries);
 });
 
-logEntriesController.put('/logs/:logId/log-entries', async (req, res) => {
+logEntriesController.post('/logs/:logId/log-entries', async (req, res) => {
   const { logId } = req.params;
   const { logEntry } = req.body;
   const logEntryService = new LogEntriesService();

@@ -39,7 +39,7 @@ export async function createLogEntry({
 }: CreateLogEntryParams): Promise<CreateLogEntryResponse> {
   const res = await fetch(`/api/logs/${logId}/log-entries`, {
     body: JSON.stringify({ logEntry }),
-    method: 'put',
+    method: 'post',
     headers: {
       'content-type': 'application/json',
     },
