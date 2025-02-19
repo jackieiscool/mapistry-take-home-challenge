@@ -9,6 +9,13 @@ interface CreateOrEditLogEntryProps {
   currentLogEntry?: EditLogEntryRequest;
 }
 
+interface LogEntryFormProps {
+  logValue: string;
+  logDate: string;
+  id?: string;
+  logId?: string;
+}
+
 const Modal = styled.div`
   position: fixed;
   z-index: 1;
@@ -78,8 +85,9 @@ export function CreateOrEditLogEntryModal({
   isEditMode = false,
   currentLogEntry,
 }: CreateOrEditLogEntryProps) {
-  // TODO - Fix date formatting for editing log
-  const [logEntry, setLogEntry] = useState<CreateLogEntryRequest | EditLogEntryRequest>(isEditMode && currentLogEntry ? currentLogEntry : { logDate: '', logValue: '' });
+  // TODO - Fix date not autofilling
+  const logEntryProps: LogEntryFormProps = currentLogEntry ? {...currentLogEntry, logValue: currentLogEntry.logValue.toString(), logDate: currentLogEntry.logDate.toString() } : { logDate: '', logValue: '' };
+  const [logEntry, setLogEntry] = useState<LogEntryFormProps>(logEntryProps);
 
   return (<>
     {
