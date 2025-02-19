@@ -56,19 +56,19 @@ export async function editLogEntry({
 }: EditLogEntryParams): Promise<EditLogEntryResponse> {
   console.log("Edit Entry");
   console.log(logEntry);
-  // const res = await fetch(`/api/logs/${logEntry.logId}/log-entries/${logEntry.id}`, {
-  //   body: JSON.stringify({ logEntry }),
-  //   method: 'put',
-  //   headers: {
-  //     'content-type': 'application/json',
-  //   },
-  // });
-  // if (!res.ok) {
-  //   throw new Error('Failed to create log entry');
-  // }
-  // const updatedLogEntry: EditLogEntryResponse = await res.json();
-  // return updatedLogEntry;
-  return logEntry;
+  const res = await fetch(`/api/logs/${logEntry.logId}/log-entries/${logEntry.id}`, {
+    body: JSON.stringify({ logEntry }),
+    method: 'put',
+    headers: {
+      'content-type': 'application/json',
+    },
+  });
+  if (!res.ok) {
+    throw new Error('Failed to create log entry');
+  }
+  const updatedLogEntry: EditLogEntryResponse = await res.json();
+  return updatedLogEntry;
+  // return logEntry;
 }
 
 export async function deleteLogEntry(logEntry: LogEntryResponse) {

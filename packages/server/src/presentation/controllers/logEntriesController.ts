@@ -30,6 +30,25 @@ logEntriesController.put('/logs/:logId/log-entries', async (req, res) => {
   }
 });
 
+logEntriesController.put('/logs/:logId/log-entries/:logEntryId', async (req, res) => {
+  const { logId } = req.params;
+  const { logEntryId } = req.params;
+  const { logEntry } = req.body;
+  const logEntryService = new LogEntriesService();
+  try {
+    const logEntries = await logEntryService.editLogEntry(logId, logEntry);
+    res.json(logEntries);
+  } catch (e: unknown) {
+    if (e instanceof RecordNotFoundError) {
+        res.status(HttpStatusCode.INVALID_DATA);
+        res.send(e.toString());
+      } else {
+        res.status(HttpStatusCode.SERVER_ERROR);
+        res.send();
+    }
+  }
+});
+
 logEntriesController.delete(
   '/logs/:logId/log-entries/:logEntryId',
   async (req, res) => {

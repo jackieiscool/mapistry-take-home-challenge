@@ -94,6 +94,7 @@ export function CreateOrEditLogEntryModal({
             onSubmit={(event: React.SyntheticEvent) => {
               event.preventDefault();
               const logEntryRequest = {
+                ...logEntry,
                 logDate: new Date(logEntry.logDate),
                 logValue: parseInt(logEntry.logValue, 10)
               }
