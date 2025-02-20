@@ -74,18 +74,10 @@ export function ViewLogEntries() {
 
   return (
     <Container>
-      {isCreateEntryOpen && (
+      {(isCreateEntryOpen || (isEditEntryOpen && currentLogEntry)) && (
         <CreateOrEditLogEntryModal
           handleClose={handleCloseModal}
-          handleCreateOrUpdate={handleCreateLogEntry}
-        />
-      )}
-      {/* TODO: combine these two modal references*/}
-      {isEditEntryOpen && currentLogEntry && (
-        <CreateOrEditLogEntryModal
-          handleClose={handleCloseModal}
-          handleCreateOrUpdate={handleEditLogEntry}
-          isEditMode={true}
+          handleCreateOrUpdate={isEditEntryOpen ? handleEditLogEntry : handleCreateLogEntry}
           currentLogEntry={currentLogEntry}
         />
       )}

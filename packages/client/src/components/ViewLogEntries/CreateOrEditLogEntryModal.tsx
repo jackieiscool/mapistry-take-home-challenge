@@ -5,7 +5,6 @@ import styled from 'styled-components';
 interface CreateOrEditLogEntryProps {
   handleClose: () => void;
   handleCreateOrUpdate: (logEntry: CreateLogEntryRequest | EditLogEntryRequest) => void;
-  isEditMode?: boolean;
   currentLogEntry?: EditLogEntryRequest;
 }
 
@@ -82,7 +81,6 @@ const ButtonContainer = styled.div`
 export function CreateOrEditLogEntryModal({
   handleClose,
   handleCreateOrUpdate,
-  isEditMode = false,
   currentLogEntry,
 }: CreateOrEditLogEntryProps) {
   const logEntryProps: LogEntryFormProps = currentLogEntry ? {...currentLogEntry, logValue: currentLogEntry.logValue.toString(), logDate: new Date(currentLogEntry.logDate).toISOString().split("T")[0]} : { logDate: '', logValue: '' };
@@ -107,7 +105,7 @@ export function CreateOrEditLogEntryModal({
           <CloseButton type="button" onClick={handleClose}>
             X
           </CloseButton>
-          <Header>{isEditMode ? 'Edit' : 'Create'} Log Entry</Header>
+          <Header>{currentLogEntry ? 'Edit' : 'Create'} Log Entry</Header>
           <StyledForm
             onSubmit={handleSubmitForm}
           >

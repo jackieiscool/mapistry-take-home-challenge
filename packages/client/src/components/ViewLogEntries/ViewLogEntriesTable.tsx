@@ -40,8 +40,6 @@ export function ViewLogEntriesTable({ logId, onEditLog }: ViewLogEntriesTablePro
 
   const handleEdit = useCallback(
     async (logEntry) => {
-      // console.log("Edit entry");
-      // console.log(logEntry);
       onEditLog(logEntry);
     },
     [refreshLogEntries],
