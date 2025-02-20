@@ -6,6 +6,7 @@ import { deleteLogEntry } from '../../shared/apiClient/logsApi';
 
 interface ViewLogEntriesTableProps {
   logId: string;
+  onEditLog: (logEntry: LogEntryResponse) => void;
 }
 
 const StyledTable = styled.table`
@@ -24,7 +25,7 @@ const StyledTable = styled.table`
   }
 `;
 
-export function ViewLogEntriesTable({ logId }: ViewLogEntriesTableProps) {
+export function ViewLogEntriesTable({ logId, onEditLog }: ViewLogEntriesTableProps) {
   const { logEntries, refreshLogEntries } = useLogEntries({ logId });
   const handleDelete = useCallback(
     async (logEntry) => {
@@ -33,6 +34,13 @@ export function ViewLogEntriesTable({ logId }: ViewLogEntriesTableProps) {
         await deleteLogEntry(logEntry);
         refreshLogEntries();
       }
+    },
+    [refreshLogEntries],
+  );
+
+  const handleEdit = useCallback(
+    async (logEntry) => {
+      onEditLog(logEntry);
     },
     [refreshLogEntries],
   );
@@ -52,7 +60,7 @@ export function ViewLogEntriesTable({ logId }: ViewLogEntriesTableProps) {
   function actions(logEntry: LogEntryResponse) {
     return (
       <div>
-        <button type="button" style={{ marginRight: '0.5rem' }}>
+        <button type="button" style={{ marginRight: '0.5rem' }} onClick={() => handleEdit(logEntry)}>
           Edit
         </button>
         <button type="button" onClick={() => handleDelete(logEntry)}>

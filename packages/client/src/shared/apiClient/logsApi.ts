@@ -1,5 +1,6 @@
 import {
   CreateLogEntryRequest,
+  EditLogEntryRequest,
   LogEntryResponse,
 } from '@mapistry/take-home-challenge-shared';
 
@@ -8,8 +9,13 @@ export interface CreateLogEntryParams {
   logEntry: CreateLogEntryRequest;
 }
 
+export interface EditLogEntryParams {
+  logEntry: EditLogEntryRequest;
+}
+
 export type FetchLogEntriesResponse = LogEntryResponse[];
 export type CreateLogEntryResponse = LogEntryResponse;
+export type EditLogEntryResponse = LogEntryResponse;
 
 export async function fetchLogEntries(
   logId: string,
@@ -33,7 +39,7 @@ export async function createLogEntry({
 }: CreateLogEntryParams): Promise<CreateLogEntryResponse> {
   const res = await fetch(`/api/logs/${logId}/log-entries`, {
     body: JSON.stringify({ logEntry }),
-    method: 'put',
+    method: 'post',
     headers: {
       'content-type': 'application/json',
     },
@@ -43,6 +49,23 @@ export async function createLogEntry({
   }
   const newlogEntry: CreateLogEntryResponse = await res.json();
   return newlogEntry;
+}
+
+export async function editLogEntry({
+  logEntry,
+}: EditLogEntryParams): Promise<EditLogEntryResponse> {
+  const res = await fetch(`/api/logs/${logEntry.logId}/log-entries/${logEntry.id}`, {
+    body: JSON.stringify({ logEntry }),
+    method: 'put',
+    headers: {
+      'content-type': 'application/json',
+    },
+  });
+  if (!res.ok) {
+    throw new Error('Failed to create log entry');
+  }
+  const updatedLogEntry: EditLogEntryResponse = await res.json();
+  return updatedLogEntry;
 }
 
 export async function deleteLogEntry(logEntry: LogEntryResponse) {

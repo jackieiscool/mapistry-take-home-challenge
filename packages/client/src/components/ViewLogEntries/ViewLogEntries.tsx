@@ -2,10 +2,11 @@ import { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { useLastVisitedLog } from '../../hooks/useLastVisitedLog';
 import { useLogEntries } from '../../hooks/useLogEntries';
-import { createLogEntry } from '../../shared/apiClient/logsApi';
+import { EditLogEntryRequest } from '@mapistry/take-home-challenge-shared';
+import { createLogEntry, editLogEntry } from '../../shared/apiClient/logsApi';
 import { Error } from '../shared/Error';
 import { Loading } from '../shared/Loading';
-import { CreateLogEntryModal } from './CreateLogEntryModal';
+import { CreateOrEditLogEntryModal } from './CreateOrEditLogEntryModal';
 import { ViewLogEntriesEmptyPage } from './ViewLogEntriesEmptyPage';
 import { ViewLogEntriesHeader } from './ViewLogEntriesHeader';
 import { ViewLogEntriesTable } from './ViewLogEntriesTable';
@@ -20,13 +21,21 @@ export function ViewLogEntries() {
     logId: lastVisitedLog.id,
   });
   const [isCreateEntryOpen, setIsCreateEntryOpen] = useState(false);
+  const [isEditEntryOpen, setIsEditEntryOpen] = useState(false);
+  const [currentLogEntry, setCurrentLogEntry] = useState<EditLogEntryRequest>();
 
   const handleAddNew = useCallback(async () => {
     setIsCreateEntryOpen(true);
   }, []);
 
+  const handleEditEntry = useCallback(async (logEntry: EditLogEntryRequest) => {
+    setCurrentLogEntry(logEntry);
+    setIsEditEntryOpen(true);
+  }, []);
+
   const handleCloseModal = useCallback(() => {
     setIsCreateEntryOpen(false);
+    setIsEditEntryOpen(false);
   }, [setIsCreateEntryOpen]);
 
   const handleCreateLogEntry = useCallback(
@@ -36,6 +45,15 @@ export function ViewLogEntries() {
       refreshLogEntries();
     },
     [lastVisitedLog, refreshLogEntries, setIsCreateEntryOpen],
+  );
+
+  const handleEditLogEntry = useCallback(
+    async (logEntry) => {
+      await editLogEntry({ logEntry });
+      setIsEditEntryOpen(false);
+      refreshLogEntries();
+    },
+    [refreshLogEntries, setIsEditEntryOpen]
   );
 
   function content() {
@@ -48,7 +66,7 @@ export function ViewLogEntries() {
       );
     }
     return logEntries.length ? (
-      <ViewLogEntriesTable logId={lastVisitedLog.id} />
+      <ViewLogEntriesTable logId={lastVisitedLog.id} onEditLog={handleEditEntry} />
     ) : (
       <ViewLogEntriesEmptyPage />
     );
@@ -56,10 +74,11 @@ export function ViewLogEntries() {
 
   return (
     <Container>
-      {isCreateEntryOpen && (
-        <CreateLogEntryModal
+      {(isCreateEntryOpen || (isEditEntryOpen && currentLogEntry)) && (
+        <CreateOrEditLogEntryModal
           handleClose={handleCloseModal}
-          handleCreate={handleCreateLogEntry}
+          handleCreateOrUpdate={isEditEntryOpen ? handleEditLogEntry : handleCreateLogEntry}
+          currentLogEntry={currentLogEntry}
         />
       )}
       <ViewLogEntriesHeader

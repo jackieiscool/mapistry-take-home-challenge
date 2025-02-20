@@ -80,6 +80,16 @@ export class Database {
     return logEntryId;
   }
 
+  public static async editLogEntry(logEntry: LogEntriesRecord) {
+    await this.simulateDbSlowness();
+    const db = await fs.readFileSync(FILE_NAME, 'utf8');
+    const allEntries = JSON.parse(db) as LogEntriesRecord[];
+    const index = allEntries.findIndex((le) => le.id === logEntry.id);
+    allEntries[index] = logEntry;
+    await fs.writeFileSync(FILE_NAME, JSON.stringify(allEntries));
+    return logEntry;
+  }
+
   private static simulateDbSlowness(ms = 1000) {
     return new Promise((resolve) => {
       setTimeout(resolve, ms);
