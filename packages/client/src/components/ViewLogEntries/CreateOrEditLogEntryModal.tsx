@@ -89,6 +89,17 @@ export function CreateOrEditLogEntryModal({
   const logEntryProps: LogEntryFormProps = currentLogEntry ? {...currentLogEntry, logValue: currentLogEntry.logValue.toString(), logDate: currentLogEntry.logDate.toString() } : { logDate: '', logValue: '' };
   const [logEntry, setLogEntry] = useState<LogEntryFormProps>(logEntryProps);
 
+  function handleSubmitForm(event: React.SyntheticEvent) {
+    event.preventDefault();
+    const logEntryRequest = {
+      ...logEntry,
+      logDate: new Date(logEntry.logDate),
+      logValue: parseInt(logEntry.logValue, 10)
+    }
+    handleCreateOrUpdate(logEntryRequest);
+
+  }
+
   return (<>
     {
       logEntry && 
@@ -99,15 +110,7 @@ export function CreateOrEditLogEntryModal({
           </CloseButton>
           <Header>{isEditMode ? 'Edit' : 'Create'} Log Entry</Header>
           <StyledForm
-            onSubmit={(event: React.SyntheticEvent) => {
-              event.preventDefault();
-              const logEntryRequest = {
-                ...logEntry,
-                logDate: new Date(logEntry.logDate),
-                logValue: parseInt(logEntry.logValue, 10)
-              }
-              handleCreateOrUpdate(logEntryRequest);
-            }}
+            onSubmit={handleSubmitForm}
           >
             <label htmlFor="logDate">
               Date:&nbsp;

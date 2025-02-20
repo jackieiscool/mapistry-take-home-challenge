@@ -54,8 +54,6 @@ export async function createLogEntry({
 export async function editLogEntry({
   logEntry,
 }: EditLogEntryParams): Promise<EditLogEntryResponse> {
-  console.log("Edit Entry");
-  console.log(logEntry);
   const res = await fetch(`/api/logs/${logEntry.logId}/log-entries/${logEntry.id}`, {
     body: JSON.stringify({ logEntry }),
     method: 'put',
@@ -68,7 +66,6 @@ export async function editLogEntry({
   }
   const updatedLogEntry: EditLogEntryResponse = await res.json();
   return updatedLogEntry;
-  // return logEntry;
 }
 
 export async function deleteLogEntry(logEntry: LogEntryResponse) {
