@@ -1,4 +1,4 @@
-import { CreateLogEntryRequest, EditLogEntryRequest } from '@mapistry/take-home-challenge-shared';
+import { DateLike, CreateLogEntryRequest, EditLogEntryRequest } from '@mapistry/take-home-challenge-shared';
 import { ReactNode, useState } from 'react';
 import styled from 'styled-components';
 
@@ -11,7 +11,7 @@ interface CreateOrEditLogEntryProps {
 
 interface LogEntryFormProps {
   logValue: string;
-  logDate: string;
+  logDate: DateLike;
   id?: string;
   logId?: string;
 }
@@ -85,8 +85,7 @@ export function CreateOrEditLogEntryModal({
   isEditMode = false,
   currentLogEntry,
 }: CreateOrEditLogEntryProps) {
-  // TODO - Fix date not autofilling
-  const logEntryProps: LogEntryFormProps = currentLogEntry ? {...currentLogEntry, logValue: currentLogEntry.logValue.toString(), logDate: currentLogEntry.logDate.toString() } : { logDate: '', logValue: '' };
+  const logEntryProps: LogEntryFormProps = currentLogEntry ? {...currentLogEntry, logValue: currentLogEntry.logValue.toString(), logDate: new Date(currentLogEntry.logDate).toISOString().split("T")[0]} : { logDate: '', logValue: '' };
   const [logEntry, setLogEntry] = useState<LogEntryFormProps>(logEntryProps);
 
   function handleSubmitForm(event: React.SyntheticEvent) {
